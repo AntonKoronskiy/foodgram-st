@@ -59,12 +59,9 @@ docker-compose exec backend python manage.py collectstatic
 docker-compose exec backend python manage.py load_database
 ```
 
-## Доступ к проекту
-> [!Главная страница]
-> [http](http://localhost:8000/)
+## Достуы к проекту
+`Главная страница` - `http://localhost:8000/`
 
-> [!Админка]
-> [http](http://localhost/admin/)
+`Админка` - `http://localhost/admin/`
 
-> [!Документация]
-> [http](http://localhost//api/docs/)
+`Документация` - `http://localhost//api/docs/`
