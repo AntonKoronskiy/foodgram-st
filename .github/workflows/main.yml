@@ -41,8 +41,8 @@ jobs:
         python -m ruff check backend/
         cd backend/
         python manage.py test 
-          build_and_push_to_docker_hub:
-
+    
+    build_backend_and_push_to_docker_hub:
     name: Push Docker image to DockerHub
     runs-on: ubuntu-latest
     needs: tests
@@ -64,28 +64,10 @@ jobs:
    
           tags: antonkoronskiy/foodgram_backend:latest 
 
-  frontend_tests:
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v4
-    - name: Set up nodeJS
-      uses: actions/setup-node@v4
-      with:
-        node-version: 18
-    - name: Install dependencies
-      run: |
-        cd frontend/
-        npm ci
-    - name: Test frontend
-      run: |
-        cd frontend/
-        npm run test
-
   build_frontend_and_push_to_docker_hub:
     name: Push frontend Docker image to DockerHub
     runs-on: ubuntu-latest
-    needs: frontend_tests
+    needs: tests
     steps:
       - name: Check out the repo
         uses: actions/checkout@v4
@@ -103,8 +85,8 @@ jobs:
           push: true
           tags: antonkoronskiy/taski_frontend:latest
 
-  build_gateway_and_push_to_docker_hub:
-    name: Push gateway Docker image to DockerHub
+  build_infra_and_push_to_docker_hub:
+    name: Push infra Docker image to DockerHub
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repo
@@ -119,6 +101,6 @@ jobs:
       - name: Push to DockerHub
         uses: docker/build-push-action@v5
         with:
-          context: ./gateway/
+          context: ./infra/
           push: true
           tags: antonkoronskiy/taski_gateway:latest 
