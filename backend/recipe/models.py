@@ -1,7 +1,10 @@
 from django.db import models
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, MaxValueValidator
 from users.models import User
-# Create your models here.
+
+
+MIN_VALUE_VALIDATE = 1
+MAX_VALUE_VALIDATE = 32000
 
 
 class Ingredients(models.Model):
@@ -11,6 +14,13 @@ class Ingredients(models.Model):
     measurement_unit = models.CharField(
         verbose_name='Единица измерения', max_length=70, default='г',
     )
+
+    class Meta:
+        verbose_name = 'ингредиент'
+        verbose_name_plural = 'ингредиенты'
+
+    def __str__(self):
+        return f'{self.name}'
 
 
 class Recipe(models.Model):
@@ -31,9 +41,18 @@ class Recipe(models.Model):
     ingredients = models.ManyToManyField(
         Ingredients, verbose_name='Ингредиенты блюда', related_name='recipes',
     )
-    cooking_time = models.IntegerField(
-        verbose_name='Время приготовления', validators=[MinValueValidator(1)],
+    cooking_time = models.PositiveSmallIntegerField(
+        verbose_name='Время приготовления', validators=[
+            MinValueValidator(MIN_VALUE_VALIDATE),
+            MaxValueValidator(MAX_VALUE_VALIDATE),],
     )
+    
+    class Meta:
+        verbose_name = 'рецепт'
+        verbose_name_plural = 'рецепты'
+
+    def __str__(self):
+        return f'{self.name}'
 
 
 class RecipeIngredient(models.Model):
@@ -45,8 +64,14 @@ class RecipeIngredient(models.Model):
         Ingredients, verbose_name='Ингредиенты', on_delete=models.CASCADE,
     )
     amount = models.PositiveSmallIntegerField(
-        verbose_name='Количество', validators=[MinValueValidator(1)],
+        verbose_name='Количество', validators=[
+            MinValueValidator(MIN_VALUE_VALIDATE),
+            MaxValueValidator(MAX_VALUE_VALIDATE),],
     )
+
+    class Meta:
+        verbose_name = 'ингредиент в рецепте'
+        verbose_name_plural = 'ингредиенты в рецептах'
 
     def __str__(self):
         return f'Рецепт {self.recipe} содержит {self.ingredient}'
@@ -85,6 +110,11 @@ class Subscription(models.Model):
 
     class Meta:
         unique_together = ('user', 'author')
+        verbose_name = 'Подписка'
+        verbose_name_plural = 'Подписки'
+    
+    def __str__(self):
+        return f'{self.user.username} - {self.author.username}'
 
 
 class ShoppingCart(models.Model):
@@ -94,7 +124,7 @@ class ShoppingCart(models.Model):
     )
     recipe = models.ForeignKey(
         Recipe, verbose_name='Рецепт', on_delete=models.CASCADE,
-        related_name='in_shopping_cart',
+        related_name='in_cart',
     )
     data = models.DateTimeField(
         verbose_name='Дата добавления', auto_now_add=True, editable=False,
