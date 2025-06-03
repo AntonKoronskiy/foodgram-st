@@ -46,7 +46,7 @@ class Recipe(models.Model):
             MinValueValidator(MIN_VALUE_VALIDATE),
             MaxValueValidator(MAX_VALUE_VALIDATE),],
     )
-    
+
     class Meta:
         verbose_name = 'рецепт'
         verbose_name_plural = 'рецепты'
@@ -112,7 +112,7 @@ class Subscription(models.Model):
         unique_together = ('user', 'author')
         verbose_name = 'Подписка'
         verbose_name_plural = 'Подписки'
-    
+
     def __str__(self):
         return f'{self.user.username} - {self.author.username}'
 

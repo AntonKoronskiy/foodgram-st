@@ -132,7 +132,8 @@ def recipes_list(request):
         recipe = serializer.save(author=request.user)
         response_serializer = ForChangeRecipeSerializer(
             recipe, context={'request': request})
-        return Response(response_serializer.data, status=status.HTTP_201_CREATED)
+        return Response(response_serializer.data,
+                        status=status.HTTP_201_CREATED)
 
     recipes = Recipe.objects.all().order_by('id')
 
@@ -159,7 +160,7 @@ def get_recipe(request, id):
 
         if not request.user.is_authenticated:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
-        
+
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)

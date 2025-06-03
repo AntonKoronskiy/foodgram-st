@@ -1,6 +1,5 @@
 from rest_framework import serializers
-from recipe.models import (Recipe, Ingredients, Favorite, Subscription,
-                           RecipeIngredient, ShoppingCart)
+from recipe.models import (Recipe, Ingredients, RecipeIngredient)
 from users.models import User
 from drf_extra_fields.fields import Base64ImageField
 from django.core.validators import MinValueValidator, MaxValueValidator
@@ -255,7 +254,7 @@ class ForReadRecipeSerializer(serializers.ModelSerializer):
         if not request or request.user.is_anonymous:
             return False
         return obj.favorited_by.filter(user=request.user).exists()
-    
+
     def get_is_in_shopping_cart(self, obj):
         request = self.context.get('request')
         if request is None or not request.user.is_authenticated:
